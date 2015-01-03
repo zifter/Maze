@@ -3,7 +3,7 @@ package maze {
 	{
 		// random seed
 		private var _seed:uint;
-		
+
 		public function get seed():uint
 		{
 			return _seed;
@@ -14,10 +14,28 @@ package maze {
 			_seed = setValue;
 		}
 		
+		public function buildAll():void
+		{
+			while(doStep()) {}
+		}
+		
+		public function doStepTimes(number:uint):Boolean
+		{
+			while (--number && doStep()) { }
+			
+			return doStep();
+		}
+		
 		// override me
 		public function isCompleted():Boolean
 		{
 			return true;
+		}
+		
+		// override me
+		public function doStep():Boolean
+		{
+			return false;
 		}
 	}
 }

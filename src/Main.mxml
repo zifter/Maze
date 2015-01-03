@@ -14,173 +14,52 @@
 	<fx:Script>
 		<![CDATA[
 			import maze.matrix.*;
-			import maze.MazePrintView;
+			import maze.Printer;
+			import maze.VisualizerBase;
 			
-			import flash.utils.clearInterval;
-			import flash.utils.setInterval;
-			import flash.utils.setTimeout;
-			
-			import mx.containers.Canvas;
-			import mx.core.FlexGlobals;
-			import mx.core.UIComponent;
 			import mx.events.FlexEvent;
-			import mx.printing.FlexPrintJob;
-			import mx.printing.FlexPrintJobScaleType;
-			import mx.utils.OnDemandEventDispatcher;
-			
-			import spark.primitives.Graphic;
-			import spark.primitives.supportClasses.FilledElement;
-			
-			private var mMaze	: MazeMatrix;
-			private var mAnimHandler	: uint;
-			private var mStep	: int;
+
+			private var mVisualizer : VisualizerBase;
 
 			protected function start(event:FlexEvent):void
 			{
+				mVisualizer = new MatrixVisualizerBase();
 				createMaze();
 			}
 
-
 			protected function createMaze():void
 			{
-				mMaze = new MazeMatrix(widthSlider.value, heightSlider.value, 0, 0, !animCb.selected);
-				
-				// Clear animation timer if runned
-				if (mAnimHandler) clearInterval(mAnimHandler);
-				
-				if (animCb.selected)
-				{
-					// Set animation timer
-					mAnimHandler = setInterval(drawStep, 5);
-				}
-				else
-				{
-					mStep = 0;
-					redrawMaze();
-				}
-			}
-			
-			
-			private function drawStep():void
-			{
-				var i:int = Math.pow(animSpeedSlider.value, 2);
-				while (--i && mMaze.doStep()) {}
-				if (!mMaze.doStep())
-				{
-					clearInterval(mAnimHandler);
-					mAnimHandler = 0;
-				}
+				mVisualizer.generator = new MazeMatrix(widthSlider.value, heightSlider.value, 0, 0, !animCb.selected);
 				redrawMaze();
 			}
-			
-			
-			private function redrawMaze(view:UIComponent = null):void
+
+			private function redrawMaze():void
 			{
-				var lineThick:Number = thicknessSlider.value;
-				var startX:Number = lineThick / 2;
-				var startY:Number = lineThick / 2;
-				var cellW:int = sizeSlider.value;
-				var cellH:int = sizeSlider.value;
-				var cData:int;
-				var cx:int = 0;
-				var cy:int = 0;
-				var i:int = 0;
-				var p:MazeIndex;
-				
-				if (!view) view = mazeView; 
-				view.setStyle('borderWeight', lineThick);
-				
-				view.graphics.clear();
-				view.width  = cellW * mMaze.width  + lineThick;
-				view.height = cellH * mMaze.height + lineThick;
-				
-				with (view.graphics)
-				{
-					for (cx = 0; cx < mMaze.width; ++cx)
-					{
-						for (cy = 0; cy < mMaze.height; ++cy)
-						{
-							cData = mMaze.getCell(cx, cy);
-							lineStyle(lineThick, (cData & MazeMatrix.CELL_VISITED) ? 0x000000 : 0xCCCCCC);
-	 						if ((cy > 0) && (cData & MazeMatrix.WALL_TOP)) {
-								moveTo(startX + cx * cellW, startY + cy * cellH);
-								lineTo(startX + cx * cellW + cellW, startY + cy * cellH);
-							}
-	
-							if ((cx > 0) && (cData & MazeMatrix.WALL_LEFT)) {
-								moveTo(startX + cx * cellW, startY + cy * cellH);
-								lineTo(startX + cx * cellW, startY + cy * cellH + cellH);
-							}
-						}
-					}
-					
-					// Display routre stack
-					for (i = 0; i < mMaze.activeRoute.length; ++i)
-					{
-						p = mMaze.activeRoute[i];
-						lineStyle();
-						beginFill(0xFF9999, 1);
-						drawRect(startX + p.x * cellW + cellW/4, startY + p.y * cellH + cellH/4, cellW/2, cellH/2);
-						endFill();
-					}
-	
-					// Draw start position
-					lineStyle();
-					beginFill(0x55FF11, 1);
-					drawCircle(startX + mMaze.startX * cellW + cellW / 2, startY + mMaze.startY * cellH + cellH / 2, cellW / 2.5);
-					endFill();
-	
-					// Draw finish position
-					lineStyle();
-					beginFill(0xFF6611, 1);
-					drawRect(startX + mMaze.finishX * cellW + 2, startY + mMaze.finishY * cellH + 2, cellW - 4, cellH - 4);
-					endFill();
-				}
-			}
-			
-			private function printMaze():void
-			{
-				// Finish maze builing if not completed yet
-				if (!mMaze.isCompleted()) mMaze.createRoute();
-				
-				var printJob:FlexPrintJob = new FlexPrintJob();
-				printJob.printAsBitmap = false;
-				if (printJob.start())
-				{
-					var printView:MazePrintView = new MazePrintView();
-					printView.width  = printJob.pageWidth;
-					printView.height = printJob.pageHeight;
-					
-					FlexGlobals.topLevelApplication.addElement(printView);
-					redrawMaze(printView.printBC);
-					
-					callLater(
-						function ():void {
-							var mw:Number = printView.printBC.width;
-							var mh:Number = printView.printBC.height;
-							var pw:Number = printView.printCont.width;
-							var ph:Number = printView.printCont.height;
-							
-							// If rotation is optimal
-							if ((mw > mh && ph > pw) || (mw < mh && ph < pw))
-							{
-								printView.printBC.rotation = 90;
-								printView.printBC.scaleY = printView.printBC.scaleX = Math.min(pw / mh, ph / mw, 1);
-							}
-							else
-							{
-								printView.printBC.scaleY = printView.printBC.scaleX = Math.min(ph / mh, pw / mw, 1);
-							}
-	
-							printJob.addObject(printView, FlexPrintJobScaleType.SHOW_ALL);
-							printJob.send(); 
-							
-							FlexGlobals.topLevelApplication.removeElement(printView);
-						}
-					);
-				}
+				mVisualizer.animated = animCb.selected;
+				mVisualizer.draw(mazeView);
 			}
 
+			private function changeAnimationSpeed():void
+			{
+				mVisualizer.speed = animSpeedSlider.value;
+			}
+
+			private function changeSize():void
+			{
+				mVisualizer.size = sizeSlider.value;
+				redrawMaze();
+			}
+
+			private function changeThickness():void
+			{
+				mVisualizer.thickness = thicknessSlider.value;
+				redrawMaze();
+			}
+
+			public function printMaze():void
+			{
+				Printer.Send(mVisualizer);
+			}
 		]]>
 	</fx:Script>
 	<s:BorderContainer backgroundColor="#F1F8FF" dropShadowVisible="false" borderAlpha="1.0" borderVisible="false" height="67" cornerRadius="5" chromeColor="#E2FBFF" contentBackgroundColor="#FFFFFD" rollOverColor="#FFFFFF">
@@ -201,16 +80,16 @@
 				<s:CheckBox id="animCb" change="createMaze()"/>
 			</mx:FormItem>
 			<mx:FormItem label="Speed" paddingTop="4">
-				<s:HSlider id="animSpeedSlider" minimum="1" maximum="10" stepSize="1" value="2" width="60"/>
+				<s:HSlider id="animSpeedSlider" minimum="1" maximum="10" stepSize="1" value="2" width="60" change="changeAnimationSpeed()"/>
 			</mx:FormItem>
 		</mx:Form>
 		<mx:VRule height="100%" width="1"/>
 		<mx:Form paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0">
 			<mx:FormItem label="Size" paddingTop="4">
-				<s:HSlider id="sizeSlider" minimum="10" maximum="50" stepSize="1" value="20" change="redrawMaze()"/>
+				<s:HSlider id="sizeSlider" minimum="10" maximum="50" stepSize="1" value="20" change="changeSize()"/>
 			</mx:FormItem>
 			<mx:FormItem label="Line" paddingTop="4">
-				<s:HSlider id="thicknessSlider" minimum="1" maximum="10" stepSize="1" value="2" change="redrawMaze()"/>
+				<s:HSlider id="thicknessSlider" minimum="1" maximum="10" stepSize="1" value="2" change="changeThickness()"/>
 			</mx:FormItem>
 		</mx:Form>
 		<s:Button label="Generate" click="createMaze()" fontSize="16" width="100" height="47"/>

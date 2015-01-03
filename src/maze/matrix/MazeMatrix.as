@@ -39,7 +39,7 @@ package maze.matrix {
 
 			if (autogenerate) 
 			{
-				createRoute();
+				buildAll();
 			}
 		}
 		
@@ -80,15 +80,7 @@ package maze.matrix {
 			arr[index] = WALL_AROUND;
 		}
 		
-		
-		// Building maze routes
-		public function createRoute():void
-		{
-			while(doStep()) {}
-		}
-		
-		
-		public function doStep():Boolean
+		override public function doStep():Boolean
 		{
 			// If now way (maze is completed)
 			if (isCompleted())
