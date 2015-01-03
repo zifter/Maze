@@ -18,6 +18,6 @@
 	</s:BorderContainer>
 	<s:HGroup>
 		<s:Label text="OpenSource Maze Generator @" fontSize="10" textDecoration="none"/>
-		<s:Label text="aivanov.com/maze-generator/" fontSize="10" textDecoration="underline"/>
+		<s:Label text="based on: aivanov.com/maze-generator/" fontSize="10" textDecoration="underline"/>
 	</s:HGroup>
 </s:Group>

@@ -1,4 +1,5 @@
-package by.zifter.Maze {
+package maze.matrix 
+{
 	public class MazeIndex
 	{
 		public var x	: int;
@@ -9,7 +10,6 @@ package by.zifter.Maze {
 			this.x = x;
 			this.y = y;
 		}
-		
 		
 		public function toString():String
 		{

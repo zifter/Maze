@@ -13,9 +13,8 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			import by.zifter.Maze.MazeIndex;
-			import by.zifter.Maze.MazeMatrix;
-			import by.zifter.Maze.MazePrintView;
+			import maze.matrix.*;
+			import maze.MazePrintView;
 			
 			import flash.utils.clearInterval;
 			import flash.utils.setInterval;
@@ -32,9 +31,9 @@
 			import spark.primitives.Graphic;
 			import spark.primitives.supportClasses.FilledElement;
 			
-			private var maze	: MazeMatrix;
-			private var animHandler	: uint;
-			private var step	: int;
+			private var mMaze	: MazeMatrix;
+			private var mAnimHandler	: uint;
+			private var mStep	: int;
 
 			protected function start(event:FlexEvent):void
 			{
@@ -44,19 +43,19 @@
 
 			protected function createMaze():void
 			{
-				maze = new MazeMatrix(widthSlider.value, heightSlider.value, 0, 0, !animCb.selected);
+				mMaze = new MazeMatrix(widthSlider.value, heightSlider.value, 0, 0, !animCb.selected);
 				
 				// Clear animation timer if runned
-				if (animHandler) clearInterval(animHandler);
+				if (mAnimHandler) clearInterval(mAnimHandler);
 				
 				if (animCb.selected)
 				{
 					// Set animation timer
-					animHandler = setInterval(drawStep, 5);
+					mAnimHandler = setInterval(drawStep, 5);
 				}
 				else
 				{
-					step = 0;
+					mStep = 0;
 					redrawMaze();
 				}
 			}
@@ -65,11 +64,11 @@
 			private function drawStep():void
 			{
 				var i:int = Math.pow(animSpeedSlider.value, 2);
-				while (--i && maze.doStep()) {}
-				if (!maze.doStep())
+				while (--i && mMaze.doStep()) {}
+				if (!mMaze.doStep())
 				{
-					clearInterval(animHandler);
-					animHandler = 0;
+					clearInterval(mAnimHandler);
+					mAnimHandler = 0;
 				}
 				redrawMaze();
 			}
@@ -92,16 +91,16 @@
 				view.setStyle('borderWeight', lineThick);
 				
 				view.graphics.clear();
-				view.width  = cellW * maze.width  + lineThick;
-				view.height = cellH * maze.height + lineThick;
+				view.width  = cellW * mMaze.width  + lineThick;
+				view.height = cellH * mMaze.height + lineThick;
 				
 				with (view.graphics)
 				{
-					for (cx = 0; cx < maze.width; ++cx)
+					for (cx = 0; cx < mMaze.width; ++cx)
 					{
-						for (cy = 0; cy < maze.height; ++cy)
+						for (cy = 0; cy < mMaze.height; ++cy)
 						{
-							cData = maze.getCell(cx, cy);
+							cData = mMaze.getCell(cx, cy);
 							lineStyle(lineThick, (cData & MazeMatrix.CELL_VISITED) ? 0x000000 : 0xCCCCCC);
 	 						if ((cy > 0) && (cData & MazeMatrix.WALL_TOP)) {
 								moveTo(startX + cx * cellW, startY + cy * cellH);
@@ -116,9 +115,9 @@
 					}
 					
 					// Display routre stack
-					for (i = 0; i < maze.activeRoute.length; ++i)
+					for (i = 0; i < mMaze.activeRoute.length; ++i)
 					{
-						p = maze.activeRoute[i];
+						p = mMaze.activeRoute[i];
 						lineStyle();
 						beginFill(0xFF9999, 1);
 						drawRect(startX + p.x * cellW + cellW/4, startY + p.y * cellH + cellH/4, cellW/2, cellH/2);
@@ -128,13 +127,13 @@
 					// Draw start position
 					lineStyle();
 					beginFill(0x55FF11, 1);
-					drawCircle(startX + maze.startX * cellW + cellW / 2, startY + maze.startY * cellH + cellH / 2, cellW / 2.5);
+					drawCircle(startX + mMaze.startX * cellW + cellW / 2, startY + mMaze.startY * cellH + cellH / 2, cellW / 2.5);
 					endFill();
 	
 					// Draw finish position
 					lineStyle();
 					beginFill(0xFF6611, 1);
-					drawRect(startX + maze.finishX * cellW + 2, startY + maze.finishY * cellH + 2, cellW - 4, cellH - 4);
+					drawRect(startX + mMaze.finishX * cellW + 2, startY + mMaze.finishY * cellH + 2, cellW - 4, cellH - 4);
 					endFill();
 				}
 			}
@@ -142,7 +141,7 @@
 			private function printMaze():void
 			{
 				// Finish maze builing if not completed yet
-				if (!maze.isCompleted) maze.createRoute();
+				if (!mMaze.isCompleted()) mMaze.createRoute();
 				
 				var printJob:FlexPrintJob = new FlexPrintJob();
 				printJob.printAsBitmap = false;

@@ -1,15 +1,12 @@
-package by.zifter.Maze {
+package maze.matrix {
 	import flash.utils.setInterval;
 
-	public class MazeMatrix
+	public class MazeMatrix extends MatrixGeneratorBase
 	{
-		private var _width		: int;
-		private var _height		: int;
 		private var _startX		: int;
 		private var _startY		: int;
 		private var _finishX		: int;
 		private var _finishY		: int;
-		private var matrix			: Array;
 		public var activeRoute		: Array;
 		private var currentStep		: int;
 		
@@ -19,14 +16,11 @@ package by.zifter.Maze {
 		public static const WALL_BOTTOM	: int	= 4;
 		public static const WALL_LEFT		: int	= 8;
 		public static const CELL_VISITED	: int	= 128;
-		
-		private const RAND_PROBABILITY	: Number	= 0.5;
-				
-		
+
 		public function MazeMatrix(w: int, h: int, startX: int=0, startY: int=0, autogenerate:Boolean = true)
 		{
-			_width	= w;
-			_height	= h;
+			width	= w;
+			height	= h;
 			_startX = startX;
 			_startY = startY;
 			_finishX	= w - 1;
@@ -47,17 +41,6 @@ package by.zifter.Maze {
 			{
 				createRoute();
 			}
-		}
-		
-		
-		public function get width():int
-		{
-			return _width;
-		}
-		
-		public function get height():int
-		{
-			return _height;
 		}
 		
 		public function get startX():int
@@ -85,7 +68,7 @@ package by.zifter.Maze {
 			return matrix[x][y];
 		}
 		
-		public function get isCompleted():Boolean
+		override public function isCompleted():Boolean
 		{
 			return activeRoute.length == 0;
 		}
@@ -108,7 +91,10 @@ package by.zifter.Maze {
 		public function doStep():Boolean
 		{
 			// If now way (maze is completed)
-			if (activeRoute.length == 0) return false;
+			if (isCompleted())
+			{
+				return false;
+			}
 			
 			var p:MazeIndex = activeRoute[currentStep];
 			var wayExist:Boolean = canMove(p, WALL_TOP) || canMove(p, WALL_RIGHT) ||
@@ -142,7 +128,7 @@ package by.zifter.Maze {
 				currentStep = 0;
 				
 				// Return false, if maze is completed
-				return (activeRoute.length > 0);
+				return !isCompleted();
 			}
 			return true;
 		}
@@ -156,7 +142,10 @@ package by.zifter.Maze {
 				pos.y + (direct == WALL_TOP ? -1 : (direct == WALL_BOTTOM ? 1 : 0))
 			);
 			matrix[newIndex.x][newIndex.y] = (matrix[newIndex.x][newIndex.y] | CELL_VISITED) & (0xFFFF ^ backDirect(direct));
-			if ((newIndex.x == _finishX) && (newIndex.y == _finishY)) { return; }
+			if ((newIndex.x == _finishX) && (newIndex.y == _finishY)) 
+			{ 
+				return; 
+			}
 			activeRoute.push(newIndex);
 		}
 		
@@ -183,9 +172,9 @@ package by.zifter.Maze {
 				case (WALL_TOP):
 					return (pos.y > 0) && ((matrix[pos.x][pos.y - 1] & CELL_VISITED) == 0);
 				case (WALL_RIGHT):
-					return (pos.x < _width - 1) && ((matrix[pos.x + 1][pos.y] & CELL_VISITED) == 0);
+					return (pos.x < width - 1) && ((matrix[pos.x + 1][pos.y] & CELL_VISITED) == 0);
 				case (WALL_BOTTOM):
-					return (pos.y < _height - 1) && ((matrix[pos.x][pos.y + 1] & CELL_VISITED) == 0);
+					return (pos.y < height - 1) && ((matrix[pos.x][pos.y + 1] & CELL_VISITED) == 0);
 				case (WALL_LEFT):
 					return (pos.x > 0) && ((matrix[pos.x - 1][pos.y] & CELL_VISITED) == 0);
 			}
