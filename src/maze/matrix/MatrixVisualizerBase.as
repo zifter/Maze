@@ -4,79 +4,52 @@ package maze.matrix {
 
 	// ui
 	import mx.core.UIComponent;
+	import flash.geom.Point;
 
 	public class MatrixVisualizerBase extends VisualizerBase
 	{
-		public function MatrixVisualizerBase()
-		{
-			super()
-		}
-
 		override protected function doDraw():void
 		{
-			var lineThick:Number = thickness;
-			var startX:Number = lineThick / 2;
-			var startY:Number = lineThick / 2;
-			var cellW:int = size;
-			var cellH:int = size;
-			var cData:int;
-			var cx:int = 0;
-			var cy:int = 0;
-			var i:int = 0;
-			var p:MazeIndex;
-			// TODO:
-			var genMaze:MazeMatrix = generator as MazeMatrix;
+			var start:Point = new Point(thickness / 2, thickness / 2);
+			var genMaze:MatrixGeneratorBase = generator as RouteGenerator;
 			
-			view.setStyle('borderWeight', lineThick);
-
+			view.setStyle('borderWeight', thickness);
 			view.graphics.clear();
-			view.width  = cellW * genMaze.width  + lineThick;
-			view.height = cellH * genMaze.height + lineThick;
-			
-			with (view.graphics)
-			{
-				for (cx = 0; cx < genMaze.width; ++cx)
-				{
-					for (cy = 0; cy < genMaze.height; ++cy)
-					{
-						cData = genMaze.getCell(cx, cy);
-						lineStyle(lineThick, (cData & MazeMatrix.CELL_VISITED) ? 0x000000 : 0xCCCCCC);
-						if ((cy > 0) && (cData & MazeMatrix.WALL_TOP)) 
-						{
-							moveTo(startX + cx * cellW, startY + cy * cellH);
-							lineTo(startX + cx * cellW + cellW, startY + cy * cellH);
-						}
 
-						if ((cx > 0) && (cData & MazeMatrix.WALL_LEFT)) 
-						{
-							moveTo(startX + cx * cellW, startY + cy * cellH);
-							lineTo(startX + cx * cellW, startY + cy * cellH + cellH);
-						}
+			view.width  = size.x * genMaze.width  + thickness;
+			view.height = size.y * genMaze.height + thickness;
+			
+			for (var cx:uint = 0; cx < genMaze.width; ++cx)
+			{
+				for (var cy:uint = 0; cy < genMaze.height; ++cy)
+				{
+					var cData:uint = genMaze.cell(cx, cy);
+					view.graphics.lineStyle(thickness, (cData & MazeType.CELL_VISITED) ? 0x000000 : 0xCCCCCC);
+					if (cData & MazeType.WALL_TOP)
+					{
+						view.graphics.moveTo(start.x + cx * size.x, start.y + cy * size.y);
+						view.graphics.lineTo(start.x + cx * size.x + size.x, start.y + cy * size.y);
+					}
+
+					if (cData & MazeType.WALL_LEFT)
+					{
+						view.graphics.moveTo(start.x + cx * size.x, start.y + cy * size.y);
+						view.graphics.lineTo(start.x + cx * size.x, start.y + cy * size.y + size.y);
 					}
 				}
-				
-				// Display routre stack
-				for (i = 0; i < genMaze.activeRoute.length; ++i)
-				{
-					p = genMaze.activeRoute[i];
-					lineStyle();
-					beginFill(0xFF9999, 1);
-					drawRect(startX + p.x * cellW + cellW/4, startY + p.y * cellH + cellH/4, cellW/2, cellH/2);
-					endFill();
-				}
-
-				// Draw start position
-				lineStyle();
-				beginFill(0x55FF11, 1);
-				drawCircle(startX + genMaze.startX * cellW + cellW / 2, startY + genMaze.startY * cellH + cellH / 2, cellW / 2.5);
-				endFill();
-
-				// Draw finish position
-				lineStyle();
-				beginFill(0xFF6611, 1);
-				drawRect(startX + genMaze.finishX * cellW + 2, startY + genMaze.finishY * cellH + 2, cellW - 4, cellH - 4);
-				endFill();
 			}
+
+			// Draw start position
+			view.graphics.lineStyle();
+			view.graphics.beginFill(0x55FF11, 1);
+			view.graphics.drawCircle(start.x + genMaze.start.x * size.x + size.x / 2, start.y + genMaze.start.y * size.y + size.y / 2, size.x / 2.5);
+			view.graphics.endFill();
+
+			// Draw finish position
+			view.graphics.lineStyle();
+			view.graphics.beginFill(0xFF6611, 1);
+			view.graphics.drawRect(start.x + genMaze.finish.x * size.x + 2, start.y + genMaze.finish.y * size.y + 2, size.x - 4, size.y - 4);
+			view.graphics.endFill();
 		}
 	}
 }

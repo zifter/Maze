@@ -2,6 +2,7 @@ package maze {
 	import mx.core.UIComponent;
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
+	import flash.geom.Point;
 
 	public class VisualizerBase
 	{
@@ -10,7 +11,7 @@ package maze {
 		private var _animated:Boolean;
 		private var _view:UIComponent;
 		private var _speed:uint;
-		private var _size:uint;
+		private var _size:Point;
 		private var _thickness:uint;
 		
 		public function VisualizerBase()
@@ -19,69 +20,27 @@ package maze {
 			animated = false;
 			view = null;
 			speed = 1;
-			size = 20;
+			size = new Point(20,20);
 			thickness = 2;
 		}
 		
-		public function get generator():GeneratorBase
-		{
-			return _generator;
-		}
+		public function get generator():GeneratorBase { return _generator; }
+		public function set generator(setValue:GeneratorBase):void { _generator = setValue; }
 
-		public function set generator(setValue:GeneratorBase):void
-		{
-			_generator = setValue;
-		}
-
-		public function get animated():Boolean
-		{
-			return _animated;
-		}
-
-		public function set animated(setValue:Boolean):void
-		{
-			_animated = setValue;
-		}
+		public function get animated():Boolean { return _animated; }
+		public function set animated(setValue:Boolean):void { _animated = setValue; }
 		
-		public function get view():UIComponent
-		{
-			return _view;
-		}
-
-		public function set view(setValue:UIComponent):void
-		{
-			_view = setValue;
-		}
+		public function get view():UIComponent { return _view; }
+		public function set view(setValue:UIComponent):void { _view = setValue; }
 		
-		public function get speed():uint
-		{
-			return _speed;
-		}
+		public function get speed():uint { return _speed; }
+		public function set speed(setValue:uint):void { _speed = setValue; }
 
-		public function set speed(setValue:uint):void
-		{
-			_speed = setValue;
-		}
+		public function get size():Point { return _size; }
+		public function set size(setValue:Point):void { _size = setValue; }
 
-		public function get size():uint
-		{
-			return _size;
-		}
-
-		public function set size(setValue:uint):void
-		{
-			_size = setValue;
-		}
-
-		public function get thickness():uint
-		{
-			return _thickness;
-		}
-
-		public function set thickness(setValue:uint):void
-		{
-			_thickness = setValue;
-		}
+		public function get thickness():uint { return _thickness; }
+		public function set thickness(setValue:uint):void { _thickness = setValue; }
 
 		private var _animHandler: uint;
 
@@ -107,7 +66,7 @@ package maze {
 		
 		public final function stepDraw():void
 		{
-			var fixedStep:int = Math.pow(speed, 2);
+			var fixedStep:int = speed;
 			if (!generator.doStepTimes(fixedStep))
 			{
 				clearInterval(_animHandler);

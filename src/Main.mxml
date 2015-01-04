@@ -13,23 +13,36 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import flash.geom.Point;
+			import maze.Mapper;
 			import maze.matrix.*;
 			import maze.Printer;
 			import maze.VisualizerBase;
-			
+			import mx.collections.ArrayCollection;
+
 			import mx.events.FlexEvent;
 
 			private var mVisualizer : VisualizerBase;
+			private const mMazeMapper : Mapper = new Mapper();
 
 			protected function start(event:FlexEvent):void
 			{
-				mVisualizer = new MatrixVisualizerBase();
+				mazeTypeCB.dataProvider = mMazeMapper.availableMazes();
+				mazeTypeCB.selectedIndex = 0;
+
 				createMaze();
 			}
 
 			protected function createMaze():void
 			{
-				mVisualizer.generator = new MazeMatrix(widthSlider.value, heightSlider.value, 0, 0, !animCb.selected);
+				mVisualizer = mMazeMapper.map(mazeTypeCB.selectedItem);
+				var genMaze:MatrixGeneratorBase = mVisualizer.generator as RouteGenerator;
+				genMaze.width = widthSlider.value;
+				genMaze.height = heightSlider.value;
+ 				genMaze.start = new Point(0, 0);
+				genMaze.finish = new Point(widthSlider.value-1, heightSlider.value-1);
+				genMaze.init();
+
 				redrawMaze();
 			}
 
@@ -46,7 +59,7 @@
 
 			private function changeSize():void
 			{
-				mVisualizer.size = sizeSlider.value;
+				mVisualizer.size =  new Point(sizeSlider.value, sizeSlider.value);
 				redrawMaze();
 			}
 
@@ -59,6 +72,11 @@
 			public function printMaze():void
 			{
 				Printer.Send(mVisualizer);
+			}
+			
+			public function changeMazeType(event:Event):void 
+			{ 
+				createMaze();
 			}
 		]]>
 	</fx:Script>
@@ -92,6 +110,8 @@
 				<s:HSlider id="thicknessSlider" minimum="1" maximum="10" stepSize="1" value="2" change="changeThickness()"/>
 			</mx:FormItem>
 		</mx:Form>
+		<s:ComboBox id="mazeTypeCB" width="140" prompt="Select a Maze Type" change="changeMazeType(event)"> 
+		</s:ComboBox>
 		<s:Button label="Generate" click="createMaze()" fontSize="16" width="100" height="47"/>
 		<s:Button label="Print" click="printMaze()" fontSize="16" width="100" height="47"/>
 	</s:BorderContainer>

@@ -4,15 +4,8 @@ package maze {
 		// random seed
 		private var _seed:uint;
 
-		public function get seed():uint
-		{
-			return _seed;
-		}
-
-		public function set seed(setValue:uint):void
-		{
-			_seed = setValue;
-		}
+		public function get seed():uint	{ return _seed; }
+		public function set seed(setValue:uint):void { _seed = setValue; }
 		
 		public function buildAll():void
 		{
@@ -24,6 +17,16 @@ package maze {
 			while (--number && doStep()) { }
 			
 			return doStep();
+		}
+		
+		public final function init():Boolean
+		{
+			return doInit();
+		}
+
+		public function doInit():Boolean
+		{
+			return true;
 		}
 		
 		// override me
