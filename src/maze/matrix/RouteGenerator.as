@@ -1,6 +1,7 @@
 package maze.matrix {
 	import flash.utils.setInterval;
 	import flash.geom.Point;
+	import utils.Random;
 
 	public class RouteGenerator extends MatrixGeneratorBase
 	{
@@ -39,7 +40,7 @@ package maze.matrix {
 
 			if (wayExist)
 			{
-				var nextDir:uint = Math.floor(Math.random() * 4);
+				var nextDir:uint = Math.floor(Random.rand() * 4);
 				switch (nextDir)
 				{
 					case 0:

@@ -29,6 +29,7 @@
 			{
 				mazeTypeCB.dataProvider = mMazeMapper.availableMazes();
 				mazeTypeCB.selectedIndex = 0;
+				seedInput.text = "0";
 
 				createMaze();
 			}
@@ -41,6 +42,7 @@
 				genMaze.height = heightSlider.value;
  				genMaze.start = new Point(0, 0);
 				genMaze.finish = new Point(widthSlider.value-1, heightSlider.value-1);
+				genMaze.seed = Number(seedInput.text);
 				genMaze.init();
 
 				redrawMaze();
@@ -78,6 +80,11 @@
 			{ 
 				createMaze();
 			}
+			
+			public function changeSeed():void 
+			{ 
+				createMaze();
+			}
 		]]>
 	</fx:Script>
 	<s:BorderContainer backgroundColor="#F1F8FF" dropShadowVisible="false" borderAlpha="1.0" borderVisible="false" height="67" cornerRadius="5" chromeColor="#E2FBFF" contentBackgroundColor="#FFFFFD" rollOverColor="#FFFFFF">
@@ -110,8 +117,16 @@
 				<s:HSlider id="thicknessSlider" minimum="1" maximum="10" stepSize="1" value="2" change="changeThickness()"/>
 			</mx:FormItem>
 		</mx:Form>
-		<s:ComboBox id="mazeTypeCB" width="140" prompt="Select a Maze Type" change="changeMazeType(event)"> 
-		</s:ComboBox>
+		<mx:VRule height="100%" width="1"/>
+		<mx:Form paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0">
+			<mx:FormItem label="Maze type">
+				<s:ComboBox id="mazeTypeCB" width="140" prompt="Select a Maze Type" change="changeMazeType(event)"/> 
+			</mx:FormItem>
+			<mx:FormItem label="seed">
+				<s:TextInput id="seedInput" restrict="0-9" widthInChars="12" maxChars="20" change="changeSeed()" />
+			</mx:FormItem>
+		</mx:Form>
+		<mx:VRule height="100%" width="1"/>
 		<s:Button label="Generate" click="createMaze()" fontSize="16" width="100" height="47"/>
 		<s:Button label="Print" click="printMaze()" fontSize="16" width="100" height="47"/>
 	</s:BorderContainer>

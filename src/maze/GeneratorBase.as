@@ -1,8 +1,10 @@
 package maze {
+	import utils.Random;
+
 	public class GeneratorBase
 	{
 		// random seed
-		private var _seed:uint;
+		private var _seed:uint = 0;
 
 		public function get seed():uint	{ return _seed; }
 		public function set seed(setValue:uint):void { _seed = setValue; }
@@ -21,6 +23,8 @@ package maze {
 		
 		public final function init():Boolean
 		{
+			Random.randomize(seed);
+
 			return doInit();
 		}
 
