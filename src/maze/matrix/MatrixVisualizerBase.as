@@ -11,7 +11,7 @@ package maze.matrix {
 		override protected function doDraw():void
 		{
 			var start:Point = new Point(thickness / 2, thickness / 2);
-			var genMaze:MatrixGeneratorBase = generator as RouteGenerator;
+			var genMaze:MatrixGeneratorBase = generator as MatrixGeneratorBase;
 			
 			view.setStyle('borderWeight', thickness);
 			view.graphics.clear();

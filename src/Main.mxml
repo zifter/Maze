@@ -37,7 +37,7 @@
 			protected function createMaze():void
 			{
 				mVisualizer = mMazeMapper.map(mazeTypeCB.selectedItem);
-				var genMaze:MatrixGeneratorBase = mVisualizer.generator as RouteGenerator;
+				var genMaze:MatrixGeneratorBase = mVisualizer.generator as MatrixGeneratorBase;
 				genMaze.width = widthSlider.value;
 				genMaze.height = heightSlider.value;
  				genMaze.start = new Point(0, 0);

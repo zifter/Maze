@@ -1,7 +1,7 @@
 package maze.matrix {
 	import flash.utils.setInterval;
 	import flash.geom.Point;
-
+	
 	public class RouteVisualizer extends MatrixVisualizerBase
 	{
 		override protected function doDraw():void

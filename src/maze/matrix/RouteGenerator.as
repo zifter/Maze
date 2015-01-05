@@ -1,18 +1,19 @@
 package maze.matrix {
-	import flash.utils.setInterval;
 	import flash.geom.Point;
 	import utils.Random;
 
+	// thanks aivanov.com/
 	public class RouteGenerator extends MatrixGeneratorBase
 	{
-		public var _activeRoute		: Array = new Array();
-		private var _currentStep	: uint = 0;
+		public var _activeRoute		: Array;
+		private var _currentStep	: uint;
 		
 		override public function doInit():Boolean
 		{
 			initMatrix(MazeType.WALL_AROUND);
-
-			_activeRoute.push(start);
+			
+			_activeRoute =  new Array(start);
+			_currentStep = 0;
 			
 			matrix[start.x][start.y] |= MazeType.CELL_VISITED;
 

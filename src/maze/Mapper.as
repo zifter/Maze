@@ -1,5 +1,6 @@
 package maze {
 	import flash.utils.Dictionary;
+	import maze.matrix.EllerGenerator;
 	import maze.matrix.MatrixVisualizerBase;
 	import maze.matrix.RouteGenerator;
 	import maze.matrix.RouteVisualizer;
@@ -12,8 +13,9 @@ package maze {
 		public function Mapper()
 		{
 			mazeMap = new Dictionary();
-			mazeMap["Route"] = create(new RouteGenerator, new RouteVisualizer);
-			mazeMap["Without_Route"] = create(new RouteGenerator, new MatrixVisualizerBase);
+			mazeMap["Route_Ivanov_A"] = create(new RouteGenerator, new RouteVisualizer);
+			mazeMap["Ivanov_A"] = create(new RouteGenerator, new MatrixVisualizerBase);
+			mazeMap["Eller"] = create(new EllerGenerator, new MatrixVisualizerBase);
 		}
 
 		public final function map(name:String):VisualizerBase
