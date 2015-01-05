@@ -5,16 +5,16 @@ package maze.matrix {
 
 	public class RouteGenerator extends MatrixGeneratorBase
 	{
-		public var _activeRoute		: Array;
-		private var _currentStep		: uint;
+		public var _activeRoute		: Array = new Array();
+		private var _currentStep	: uint = 0;
 		
 		override public function doInit():Boolean
 		{
 			initMatrix(MazeType.WALL_AROUND);
 
-			_activeRoute = new Array(start);
+			_activeRoute.push(start);
+			
 			matrix[start.x][start.y] |= MazeType.CELL_VISITED;
-			_currentStep = 0;
 
 			return true;
 		}
@@ -33,29 +33,23 @@ package maze.matrix {
 			}
 			
 			var p:Point = _activeRoute[_currentStep];
-			var wayExist:Boolean = canMove(p, MazeType.WALL_TOP) ||
-				canMove(p, MazeType.WALL_RIGHT) ||
-				canMove(p, MazeType.WALL_BOTTOM) || 
-				canMove(p, MazeType.WALL_LEFT);
+			
+			var availabeWay:Array = new Array();
+			if (canMove(p, MazeType.WALL_TOP)) 		{ availabeWay.push(MazeType.WALL_TOP); }
+			if (canMove(p, MazeType.WALL_RIGHT))	{ availabeWay.push(MazeType.WALL_RIGHT); }
+			if (canMove(p, MazeType.WALL_BOTTOM)) 	{ availabeWay.push(MazeType.WALL_BOTTOM); }
+			if (canMove(p, MazeType.WALL_LEFT)) 	{ availabeWay.push(MazeType.WALL_LEFT); }
 
-			if (wayExist)
+			if (availabeWay.length != 0)
 			{
-				var nextDir:uint = Math.floor(Random.rand() * 4);
-				switch (nextDir)
+				var nextDirIndex:uint = 0;
+				if (availabeWay.length > 1)
 				{
-					case 0:
-						if (canMove(p, MazeType.WALL_TOP)) { addRoute(p, MazeType.WALL_TOP); }
-						break;
-					case 1:
-						if (canMove(p, MazeType.WALL_RIGHT)) { addRoute(p, MazeType.WALL_RIGHT); }
-						break;
-					case 2:
-						if (canMove(p, MazeType.WALL_BOTTOM)) { addRoute(p, MazeType.WALL_BOTTOM);  }
-						break;
-					case 3:
-						if (canMove(p, MazeType.WALL_LEFT)) { addRoute(p, MazeType.WALL_LEFT); }
-						break;
-				}				
+					nextDirIndex = Math.floor(Random.rand() * availabeWay.length);
+				}
+				
+				addRoute(p, availabeWay[nextDirIndex]);
+		
 				// Continue route
 				_currentStep = _activeRoute.length - 1;
 			}
