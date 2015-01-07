@@ -75,7 +75,7 @@ package maze.matrix {
 			var indexY:uint = pos.y + (direct == MazeType.WALL_TOP ? -1 : (direct == MazeType.WALL_BOTTOM ? 1 : 0))
 			var newIndex:Point = new Point(indexX, indexY);
 
-			matrix[newIndex.x][newIndex.y] = (cellP(newIndex) | MazeType.CELL_VISITED) & (0xFFFF ^ MazeType.reverse(direct));
+			matrix[newIndex.x][newIndex.y] = (cellP(newIndex) | MazeType.CELL_VISITED) & (MazeType.ALL ^ MazeType.reverse(direct));
 			if (newIndex == finish) 
 			{ 
 				return; 
