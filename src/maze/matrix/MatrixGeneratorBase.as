@@ -34,9 +34,13 @@ package maze.matrix {
 		{
 			return matrix[p.x][p.y];
 		}
-		public function setCell(p:Point, value:uint):void
+		public function setCell(x:uint, y:uint, value:uint):void
 		{
-			matrix[p.x][p.y] = value;
+			matrix[x][y] = value;
+		}
+		public function setCellP(p:Point, value:uint):void
+		{
+			setCell(p.x, p.y, value)
 		}
 				
 		public function initMatrix(cellValue:uint):void
@@ -75,56 +79,71 @@ package maze.matrix {
 			return false;
 		}
 		
-		public function isValid(pos:Point):Boolean
+		public function isValidP(pos:Point):Boolean
 		{
-			return (pos.x >= 0 && pos.x < width) && (pos.y >= 0 && pos.y < height);
+			return isValid(pos.x, pos.y);
 		}
-		
-		public function setWall(pos: Point, side: uint): Boolean
+		public function isValid(x:uint, y:uint):Boolean
 		{
-			if (!isValid(pos))
+			return isValidX(x) && isValidY(y);
+		}
+		public function isValidX(x:uint):Boolean
+		{
+			return (x >= 0 && x < width);
+		}
+		public function isValidY(y:uint):Boolean
+		{
+			return (y >= 0 && y < height);
+		}
+		public function setWall(x:uint, y:uint, side: uint): Boolean
+		{
+			if (!isValid(x, y))
 			{
 				return false;
 			}
 			// set side for pos cell
-			setCell(pos, cellP(pos) | side);
+			setCell(x, y, cell(x, y) | side);
 			
 			// set side for neighbor
 			var neighbor:Point;
 			if (side & MazeType.WALL_BOTTOM)
 			{
-				neighbor = new Point(pos.x, pos.y + 1);
-				if (isValid(neighbor))
+				neighbor = new Point(x, y + 1);
+				if (isValidP(neighbor))
 				{
-					setCell(neighbor, cellP(neighbor) | MazeType.WALL_TOP);
+					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_TOP);
 				}
 			}
 			if (side & MazeType.WALL_TOP)
 			{
-				neighbor = new Point(pos.x, pos.y - 1);
-				if (isValid(neighbor))
+				neighbor = new Point(x, y - 1);
+				if (isValidP(neighbor))
 				{
-					setCell(neighbor, cellP(neighbor) | MazeType.WALL_BOTTOM);
+					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_BOTTOM);
 				}
 			}
 			if (side & MazeType.WALL_LEFT)
 			{
-				neighbor = new Point(pos.x-1, pos.y);
-				if (isValid(neighbor))
+				neighbor = new Point(x-1, y);
+				if (isValidP(neighbor))
 				{
-					setCell(neighbor, cellP(neighbor) | MazeType.WALL_RIGHT);
+					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_RIGHT);
 				}
 			}
 			if (side & MazeType.WALL_RIGHT)
 			{
-				neighbor = new Point(pos.x+1, pos.y);
-				if (isValid(neighbor))
+				neighbor = new Point(x+1, y);
+				if (isValidP(neighbor))
 				{
-					setCell(neighbor, cellP(neighbor) | MazeType.WALL_LEFT);
+					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_LEFT);
 				}
 			}
 
 			return true;
+		}
+		public function setWallP(pos: Point, side: uint): Boolean
+		{
+			return setWall(pos.x, pos.y, side);
 		}
 	}
 }
