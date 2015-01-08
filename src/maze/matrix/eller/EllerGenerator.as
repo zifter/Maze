@@ -1,6 +1,9 @@
-package maze.matrix {
+package maze.matrix.eller {
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	import utils.Random;
+	import maze.matrix.MazeType;
+	import maze.matrix.MatrixGeneratorBase;
 
 	public class EllerGenerator extends MatrixGeneratorBase
 	{
@@ -8,6 +11,7 @@ package maze.matrix {
 		private var _currentX : uint;
 		private var _line : Array;
 		private var _createBottomWallMode:Boolean;
+		private var _visitedSet : Dictionary;
 
 		override public function doInit():Boolean
 		{
@@ -20,6 +24,7 @@ package maze.matrix {
 				_line[i] = i;
 			}
 			_createBottomWallMode = false;
+			_visitedSet = new Dictionary();
 			return true;
 		}
 
@@ -34,24 +39,37 @@ package maze.matrix {
 			{
 				return false;
 			}
+
 			if (_currentX == width)
 			{
 				_currentX = 0;
 				if (_createBottomWallMode)
 				{
-					resetLine();
-					_currentY ++;
+					// don't reset cell's sets at the last line
+					if (_currentY != height-1)
+					{
+						resetLine();
+					}
+
+					_currentY++;
 				}
 				_createBottomWallMode = !_createBottomWallMode;
 			}
 			
-			if (_createBottomWallMode)
+			if (_currentY == height)
 			{
-				createBottomWall();
+				createLastLine();
 			}
 			else
 			{
-				createRightWall();
+				if (_createBottomWallMode)
+				{
+					createBottomWall();
+				}
+				else
+				{
+					createRightWall();
+				}	
 			}
 
 			return true;
@@ -71,7 +89,7 @@ package maze.matrix {
 				}
 				else
 				{
-					//move this cell in one set
+					//move this cell in one set with current cell
 					_line[newX] =  _line[_currentX];
 				}
 			}
@@ -81,33 +99,61 @@ package maze.matrix {
 		
 		public function createBottomWall():void
 		{
-			var rightX:uint = _currentX;
-			for (var side:uint = rightX+1; side < width; ++side)
+			while (isValidX(_currentX) && _visitedSet[_line[_currentX]] == MazeType.CELL_VISITED)
 			{
-				if (_line[_currentX] == _line[side])
-				{
-					rightX = side;
-				}
-				else
-				{
-					break;
-				}
+				_currentX++;
 			}
-			var maximumWallNumber:uint = rightX - _currentX;
-			for (var i:uint = _currentX; i <= rightX; ++i)
+			if (!isValidX(_currentX))
 			{
-				if (maximumWallNumber > 0 && (Random.rand() * 5) > 3)
-				{
-					setWall(i, _currentY, MazeType.WALL_BOTTOM);
-					maximumWallNumber--;
-				}
+				return;
 			}
 
-			_currentX = rightX+1;
+			_visitedSet[_line[_currentX]] = MazeType.CELL_VISITED;
+
+			var indexes:Array = new Array();
+			for (var i:uint = _currentX; i <= width; ++i)
+			{
+				if (_line[_currentX] == _line[i])
+				{
+					indexes.push(i);
+				}
+			}
+			
+			var maximumWallNumber:uint = indexes.length - 1;
+			while (maximumWallNumber > 0)
+			{
+				var index:uint = Math.floor(Random.rand() * indexes.length);
+				setWall(indexes[index], _currentY, MazeType.WALL_BOTTOM);
+				maximumWallNumber--;
+			}
+		}
+
+		public function createLastLine():void
+		{
+			while (isValidX(_currentX) && _line[_currentX] == _line[0])
+			{
+				_currentX++;
+			}
+			if (!isValidX(_currentX))
+			{
+				return;
+			}
+			var prevX:uint = _currentX - 1;
+			breakWall(prevX, _currentY - 1, MazeType.WALL_RIGHT);
+			
+			for (var i:uint = width-1;  i >= _currentX; --i)
+			{
+				if (_line[i] == _line[_currentX])
+				{
+					_line[i] = _line[0];		
+				}
+			}
 		}
 		
 		public function resetLine():void
 		{
+			trace(_line)
+			_visitedSet = new Dictionary();
 			for (var i:uint = 0; i < width; ++i)
 			{
 				if (cell(i, _currentY) & MazeType.WALL_BOTTOM)

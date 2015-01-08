@@ -1,6 +1,7 @@
-package maze.matrix {
+package maze.matrix.route {
 	import flash.utils.setInterval;
 	import flash.geom.Point;
+	import maze.matrix.MatrixVisualizerBase;
 	
 	public class RouteVisualizer extends MatrixVisualizerBase
 	{

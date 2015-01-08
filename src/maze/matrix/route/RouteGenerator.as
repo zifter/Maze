@@ -1,7 +1,9 @@
-package maze.matrix {
+package maze.matrix.route {
 	import flash.geom.Point;
 	import utils.Random;
-
+	import maze.matrix.MatrixGeneratorBase;
+	import maze.matrix.MazeType;
+	
 	// thanks aivanov.com/
 	public class RouteGenerator extends MatrixGeneratorBase
 	{

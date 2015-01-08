@@ -1,4 +1,5 @@
 package maze.matrix {
+	import flash.geom.Point;
 	public class MazeType
 	{
 		public static const EMPTY 			: uint	= 0;
@@ -20,6 +21,31 @@ package maze.matrix {
 				case MazeType.WALL_LEFT: return MazeType.WALL_RIGHT;
 			}
 			return 0;
+		}
+		public static function neighbor(x:uint, y:uint, dir:uint):Point
+		{
+			if (dir == MazeType.WALL_BOTTOM)
+			{
+				return new Point(x, y + 1);
+			}
+			else if (dir == MazeType.WALL_TOP)
+			{
+				return new Point(x, y - 1);
+			}
+			else if (dir == MazeType.WALL_LEFT)
+			{
+				return new Point(x-1, y);
+			}
+			else if (dir == MazeType.WALL_RIGHT)
+			{
+				return new Point(x+1, y);
+			}			
+
+			return new Point(x, y);
+		}
+		public static function neighborP(pos:Point, dir:uint):Point
+		{
+			return neighbor(pos.x, pos.y, dir);
 		}
 	}
 }

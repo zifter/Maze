@@ -1,9 +1,9 @@
 package maze {
 	import flash.utils.Dictionary;
-	import maze.matrix.EllerGenerator;
+	import maze.matrix.eller.EllerGenerator;
 	import maze.matrix.MatrixVisualizerBase;
-	import maze.matrix.RouteGenerator;
-	import maze.matrix.RouteVisualizer;
+	import maze.matrix.route.RouteGenerator;
+	import maze.matrix.route.RouteVisualizer;
 	import mx.collections.ArrayCollection;
 
 	public class Mapper

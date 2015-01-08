@@ -105,38 +105,10 @@ package maze.matrix {
 			setCell(x, y, cell(x, y) | side);
 			
 			// set side for neighbor
-			var neighbor:Point;
-			if (side & MazeType.WALL_BOTTOM)
+			var neighbor:Point = MazeType.neighbor(x, y, side);
+			if (isValidP(neighbor))
 			{
-				neighbor = new Point(x, y + 1);
-				if (isValidP(neighbor))
-				{
-					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_TOP);
-				}
-			}
-			if (side & MazeType.WALL_TOP)
-			{
-				neighbor = new Point(x, y - 1);
-				if (isValidP(neighbor))
-				{
-					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_BOTTOM);
-				}
-			}
-			if (side & MazeType.WALL_LEFT)
-			{
-				neighbor = new Point(x-1, y);
-				if (isValidP(neighbor))
-				{
-					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_RIGHT);
-				}
-			}
-			if (side & MazeType.WALL_RIGHT)
-			{
-				neighbor = new Point(x+1, y);
-				if (isValidP(neighbor))
-				{
-					setCellP(neighbor, cellP(neighbor) | MazeType.WALL_LEFT);
-				}
+				setCellP(neighbor, cellP(neighbor) | MazeType.reverse(side));
 			}
 
 			return true;
@@ -144,6 +116,29 @@ package maze.matrix {
 		public function setWallP(pos: Point, side: uint): Boolean
 		{
 			return setWall(pos.x, pos.y, side);
+		}
+
+		public function breakWall(x:uint, y:uint, side: uint): Boolean
+		{
+			if (!isValid(x, y))
+			{
+				return false;
+			}
+			// set side for pos cell
+			setCell(x, y, cell(x, y) & (MazeType.ALL ^ side));
+			
+			// set side for neighbor
+			var neighbor:Point = MazeType.neighbor(x, y, side);
+			if (isValidP(neighbor))
+			{
+				setCellP(neighbor, cellP(neighbor) & (MazeType.ALL ^ MazeType.reverse(side)));
+			}
+
+			return true;
+		}
+		public function breakWallP(pos: Point, side: uint): Boolean
+		{
+			return breakWall(pos.x, pos.y, side);
 		}
 	}
 }
