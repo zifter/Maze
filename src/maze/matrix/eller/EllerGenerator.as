@@ -89,8 +89,8 @@ package maze.matrix.eller {
 				}
 				else
 				{
-					//move this cell in one set with current cell
-					_line[newX] =  _line[_currentX];
+					//move all cell from set in one set with current cell
+					merge(_line[newX], _line[_currentX])
 				}
 			}
 
@@ -122,7 +122,7 @@ package maze.matrix.eller {
 			var maximumWallNumber:uint = indexes.length - 1;
 			while (maximumWallNumber > 0)
 			{
-				var index:uint = Math.floor(Random.rand() * indexes.length);
+				var index:uint = Random.rand(indexes.length);
 				setWall(indexes[index], _currentY, MazeType.WALL_BOTTOM);
 				maximumWallNumber--;
 			}
@@ -141,13 +141,7 @@ package maze.matrix.eller {
 			var prevX:uint = _currentX - 1;
 			breakWall(prevX, _currentY - 1, MazeType.WALL_RIGHT);
 			
-			for (var i:uint = width-1;  i >= _currentX; --i)
-			{
-				if (_line[i] == _line[_currentX])
-				{
-					_line[i] = _line[0];		
-				}
-			}
+			merge(_line[_currentX], _line[0])
 		}
 		
 		public function resetLine():void
@@ -165,7 +159,18 @@ package maze.matrix.eller {
 
 		public function needCreateRightWall(px1:uint, px2:uint):Boolean
 		{
-			return _line[px1] == _line[px2] || (Random.rand() * 5) > 3 ;
+			return _line[px1] == _line[px2] || Random.nextBoolean();
+		}
+		
+		public function merge(srcSet:uint, destSet:uint):void
+		{
+			for (var i:uint = 0; i < width; ++i)
+			{
+				if (_line[i] == srcSet)
+				{
+					_line[i] = destSet;		
+				}
+			}
 		}
 	}
 }

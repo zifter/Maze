@@ -39,9 +39,21 @@ package utils
 		
 		//  returns a random Number from 0 – 1
 		// if seed equal 0, then using Math.random()
-		public static function rand():Number
+		public static function random():Number
 		{
 			return randFunc();
+		}
+		public static function nextBoolean():Boolean
+		{
+			return (rand(100) % 2 == 0);
+		}
+		public static function randInterval(min:uint, max:uint):uint
+		{
+			return Math.floor(random()*(max-min))-min;
+		}
+		public static function rand(num:uint):uint
+		{
+			return randInterval(0, num);
 		}
 	}
 }

@@ -48,7 +48,7 @@ package maze.matrix.route {
 				var nextDirIndex:uint = 0;
 				if (availabeWay.length > 1)
 				{
-					nextDirIndex = Math.floor(Random.rand() * availabeWay.length);
+					nextDirIndex = Random.rand(availabeWay.length);
 				}
 				
 				addRoute(p, availabeWay[nextDirIndex]);
