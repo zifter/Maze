@@ -78,6 +78,7 @@
 			
 			public function changeMazeType(event:Event):void 
 			{ 
+				mVisualizer.generator.buildAll();
 				createMaze();
 			}
 			
