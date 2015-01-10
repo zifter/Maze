@@ -19,6 +19,7 @@
 			import maze.Printer;
 			import maze.VisualizerBase;
 			import mx.collections.ArrayCollection;
+			import utils.set.PointSet;
 
 			import mx.events.FlexEvent;
 

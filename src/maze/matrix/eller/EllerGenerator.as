@@ -1,9 +1,9 @@
 package maze.matrix.eller {
 	import flash.geom.Point;
-	import flash.utils.Dictionary;
 	import utils.Random;
 	import maze.matrix.MazeType;
 	import maze.matrix.MatrixGeneratorBase;
+	import utils.SetBase;
 
 	public class EllerGenerator extends MatrixGeneratorBase
 	{
@@ -11,7 +11,7 @@ package maze.matrix.eller {
 		private var _currentX : uint;
 		private var _line : Array;
 		private var _createBottomWallMode:Boolean;
-		private var _visitedSet : Dictionary;
+		private var _visitedSet : SetBase;
 
 		override public function doInit():Boolean
 		{
@@ -24,7 +24,7 @@ package maze.matrix.eller {
 				_line[i] = i;
 			}
 			_createBottomWallMode = false;
-			_visitedSet = new Dictionary();
+			_visitedSet = new SetBase();
 			return true;
 		}
 
@@ -99,7 +99,7 @@ package maze.matrix.eller {
 		
 		public function createBottomWall():void
 		{
-			while (isValidX(_currentX) && _visitedSet[_line[_currentX]] == MazeType.CELL_VISITED)
+			while (isValidX(_currentX) && _visitedSet.contains(_line[_currentX]))
 			{
 				_currentX++;
 			}
@@ -108,7 +108,7 @@ package maze.matrix.eller {
 				return;
 			}
 
-			_visitedSet[_line[_currentX]] = MazeType.CELL_VISITED;
+			_visitedSet.add(_line[_currentX])
 
 			var indexes:Array = new Array();
 			for (var i:uint = _currentX; i <= width; ++i)
@@ -146,8 +146,7 @@ package maze.matrix.eller {
 		
 		public function resetLine():void
 		{
-			trace(_line)
-			_visitedSet = new Dictionary();
+			_visitedSet.removeAll();
 			for (var i:uint = 0; i < width; ++i)
 			{
 				if (cell(i, _currentY) & MazeType.WALL_BOTTOM)
