@@ -45,13 +45,13 @@ package utils
 		}
 		public static function nextBoolean():Boolean
 		{
-			return (rand(100) % 2 == 0);
+			return (randNumber(100) % 2 == 0);
 		}
 		public static function randInterval(min:uint, max:uint):uint
 		{
 			return Math.floor(random()*(max-min))-min;
 		}
-		public static function rand(num:uint):uint
+		public static function randNumber(num:uint):uint
 		{
 			return randInterval(0, num);
 		}

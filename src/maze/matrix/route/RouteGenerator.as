@@ -29,26 +29,23 @@ package maze.matrix.route {
 		
 		override public function doStep():Boolean
 		{
-			// If now way (maze is completed)
-			if (isCompleted())
-			{
-				return false;
-			}
-			
 			var p:Point = _activeRoute[_currentStep];
 			
 			var availabeWay:Array = new Array();
-			if (canMove(p, MazeType.WALL_TOP)) 		{ availabeWay.push(MazeType.WALL_TOP); }
-			if (canMove(p, MazeType.WALL_RIGHT))	{ availabeWay.push(MazeType.WALL_RIGHT); }
-			if (canMove(p, MazeType.WALL_BOTTOM)) 	{ availabeWay.push(MazeType.WALL_BOTTOM); }
-			if (canMove(p, MazeType.WALL_LEFT)) 	{ availabeWay.push(MazeType.WALL_LEFT); }
+			for (var i:uint = 0; i < MazeType.WALLS_ARRAY.length; ++i)
+			{
+				if (canMove(p, MazeType.WALLS_ARRAY[i])) 		
+				{ 
+					availabeWay.push(MazeType.WALLS_ARRAY[i]); 
+				}	
+			}
 
 			if (availabeWay.length != 0)
 			{
 				var nextDirIndex:uint = 0;
 				if (availabeWay.length > 1)
 				{
-					nextDirIndex = Random.rand(availabeWay.length);
+					nextDirIndex = Random.randNumber(availabeWay.length);
 				}
 				
 				addRoute(p, availabeWay[nextDirIndex]);

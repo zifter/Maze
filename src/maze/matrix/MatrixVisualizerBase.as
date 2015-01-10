@@ -18,13 +18,19 @@ package maze.matrix {
 
 			view.width  = size.x * genMaze.width  + thickness;
 			view.height = size.y * genMaze.height + thickness;
-			
+			view.graphics.lineStyle(thickness, 0x000000);
+
 			for (var cx:uint = 0; cx < genMaze.width; ++cx)
 			{
 				for (var cy:uint = 0; cy < genMaze.height; ++cy)
 				{
 					var cData:uint = genMaze.cell(cx, cy);
-					view.graphics.lineStyle(thickness, (cData & MazeType.CELL_VISITED) ? 0x000000 : 0xCCCCCC);
+					if (!(cData & MazeType.CELL_VISITED))
+					{
+						view.graphics.beginFill(0xB0B5BF, 1);
+						view.graphics.drawRect(cx * size.x, cy * size.y, size.x, size.y);
+						view.graphics.endFill();					
+					}
 					if (cData & MazeType.WALL_TOP)
 					{
 						view.graphics.moveTo(start.x + cx * size.x, start.y + cy * size.y);

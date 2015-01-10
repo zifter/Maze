@@ -17,14 +17,9 @@ package utils
 
 		public function add(item:*):Boolean
 		{
-			var len:int = _items.length;
-			for(var i:uint = 0; i < len; i++)
+			if (contains(item))
 			{
-				if(comporator(_items[i], item))
-				{
-					_items[i] = item;
-					return false;
-				}
+				return false;
 			}
 
 			_items.push(item);
@@ -76,6 +71,18 @@ package utils
 		public function get length():uint
 		{
 				return _items.length;
+		}
+		
+		public function random():*
+		{
+			return _items[Random.randNumber(length)];
+		}
+		public function randomAndRemove():*
+		{
+			var index:uint = Random.randNumber(length);
+			var obj:* = _items[index];
+			_items.splice(index, 1);
+			return obj;
 		}
 	}
 }

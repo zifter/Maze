@@ -11,14 +11,14 @@ package maze {
 		
 		public function buildAll():void
 		{
-			while(doStep()) {}
+			while(step()) {}
 		}
 		
 		public function doStepTimes(number:uint):Boolean
 		{
-			while (--number && doStep()) { }
+			while (--number && step()) { }
 			
-			return doStep();
+			return step();
 		}
 		
 		public final function init():Boolean
@@ -31,6 +31,15 @@ package maze {
 		public function doInit():Boolean
 		{
 			return true;
+		}
+		
+		public function step():Boolean
+		{
+			if (isCompleted())
+			{
+				return false;
+			}
+			return doStep();
 		}
 		
 		// override me

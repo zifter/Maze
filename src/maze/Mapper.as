@@ -1,5 +1,6 @@
 package maze {
 	import flash.utils.Dictionary;
+	import maze.matrix.prim.PrimVisualizer;
 	import mx.collections.ArrayCollection;
 	import maze.matrix.MatrixVisualizerBase;
 	
@@ -20,7 +21,7 @@ package maze {
 			mazeMap["Route_Ivanov_A"] = create(new RouteGenerator, new RouteVisualizer);
 			mazeMap["Ivanov_A"] = create(new RouteGenerator, new MatrixVisualizerBase);
 			mazeMap["Eller's algorithm"] = create(new EllerGenerator, new MatrixVisualizerBase);
-			mazeMap["Prim's algorithm"] = create(new PrimGenerator, new MatrixVisualizerBase);
+			mazeMap["Prim's algorithm"] = create(new PrimGenerator, new PrimVisualizer);
 		}
 
 		public final function map(name:String):VisualizerBase

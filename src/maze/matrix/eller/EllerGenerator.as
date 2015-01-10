@@ -35,11 +35,6 @@ package maze.matrix.eller {
 		
 		override public function doStep():Boolean
 		{
-			if (isCompleted())
-			{
-				return false;
-			}
-
 			if (_currentX == width)
 			{
 				_currentX = 0;
@@ -122,7 +117,7 @@ package maze.matrix.eller {
 			var maximumWallNumber:uint = indexes.length - 1;
 			while (maximumWallNumber > 0)
 			{
-				var index:uint = Random.rand(indexes.length);
+				var index:uint = Random.randNumber(indexes.length);
 				setWall(indexes[index], _currentY, MazeType.WALL_BOTTOM);
 				maximumWallNumber--;
 			}
