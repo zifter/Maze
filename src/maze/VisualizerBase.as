@@ -6,42 +6,27 @@ package maze {
 
 	public class VisualizerBase
 	{
+		private var _settings:VisualSettings;
 		// getter/setter
 		private var _generator:GeneratorBase;
-		private var _animated:Boolean;
 		private var _view:UIComponent;
-		private var _speed:uint;
-		private var _size:Point;
-		private var _thickness:uint;
 		
 		public function VisualizerBase()
 		{
+			_settings = new VisualSettings();
 			generator = null;
-			animated = false;
 			view = null;
-			speed = 1;
-			size = new Point(20,20);
-			thickness = 2;
 		}
 		
 		public function get generator():GeneratorBase { return _generator; }
 		public function set generator(setValue:GeneratorBase):void { _generator = setValue; }
-
-		public function get animated():Boolean { return _animated; }
-		public function set animated(setValue:Boolean):void { _animated = setValue; }
 		
 		public function get view():UIComponent { return _view; }
 		public function set view(setValue:UIComponent):void { _view = setValue; }
 		
-		public function get speed():uint { return _speed; }
-		public function set speed(setValue:uint):void { _speed = setValue; }
-
-		public function get size():Point { return _size; }
-		public function set size(setValue:Point):void { _size = setValue; }
-
-		public function get thickness():uint { return _thickness; }
-		public function set thickness(setValue:uint):void { _thickness = setValue; }
-
+		public function get settings():VisualSettings { return _settings; }
+		public function set settings(setValue:VisualSettings):void { _settings = setValue; }
+		
 		private var _animHandler: uint;
 
 		public final function draw(uiView:UIComponent):void
@@ -53,7 +38,7 @@ package maze {
 				clearInterval(_animHandler);
 			}
 
-			if (animated)
+			if (settings.ANIMATED)
 			{
 				_animHandler = setInterval(stepDraw, 5);
 			}
@@ -66,7 +51,7 @@ package maze {
 		
 		public final function stepDraw():void
 		{
-			var fixedStep:int = speed;
+			var fixedStep:int = settings.SPEED;
 			if (!generator.doStepTimes(fixedStep))
 			{
 				clearInterval(_animHandler);

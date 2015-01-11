@@ -20,6 +20,7 @@
 			import maze.VisualizerBase;
 			import mx.collections.ArrayCollection;
 			import utils.set.PointSet;
+			import maze.VisualSettings;
 
 			import mx.events.FlexEvent;
 
@@ -51,24 +52,24 @@
 
 			private function redrawMaze():void
 			{
-				mVisualizer.animated = animCb.selected;
+				mVisualizer.settings.ANIMATED = animCb.selected;
 				mVisualizer.draw(mazeView);
 			}
 
 			private function changeAnimationSpeed():void
 			{
-				mVisualizer.speed = animSpeedSlider.value;
+				mVisualizer.settings.SPEED = animSpeedSlider.value;
 			}
 
 			private function changeSize():void
 			{
-				mVisualizer.size =  new Point(sizeSlider.value, sizeSlider.value);
+				mVisualizer.settings.SIZE =  new Point(sizeSlider.value, sizeSlider.value);
 				redrawMaze();
 			}
 
 			private function changeThickness():void
 			{
-				mVisualizer.thickness = thicknessSlider.value;
+				mVisualizer.settings.LINE_THICKNESS = thicknessSlider.value;
 				redrawMaze();
 			}
 
