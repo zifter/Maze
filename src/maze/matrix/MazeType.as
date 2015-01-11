@@ -11,6 +11,7 @@ package maze.matrix {
 		public static const CELL_VISITED	: uint	= 1 << 7;
 		public static const ALL				: uint	= 0xFFFF;
 		public static const WALLS_ARRAY		: Array = new Array(WALL_TOP, WALL_BOTTOM, WALL_LEFT, WALL_RIGHT);
+		
 		public static function reverse(direction:uint):uint
 		{
 			switch (direction)
