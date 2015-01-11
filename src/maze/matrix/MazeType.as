@@ -1,5 +1,7 @@
 package maze.matrix {
 	import flash.geom.Point;
+	import utils.Random;
+
 	public class MazeType
 	{
 		public static const EMPTY 			: uint	= 0;
@@ -7,9 +9,12 @@ package maze.matrix {
 		public static const WALL_RIGHT		: uint	= 1 << 1;
 		public static const WALL_BOTTOM		: uint	= 1 << 2;
 		public static const WALL_LEFT		: uint	= 1 << 3;
-		public static const WALL_AROUND		: uint	= WALL_TOP | WALL_RIGHT | WALL_BOTTOM | WALL_LEFT;
+		// 4, 5, 6 - not used
 		public static const CELL_VISITED	: uint	= 1 << 7;
+		
+		public static const WALL_AROUND		: uint	= WALL_TOP | WALL_RIGHT | WALL_BOTTOM | WALL_LEFT;
 		public static const ALL				: uint	= 0xFFFF;
+		
 		public static const WALLS_ARRAY		: Array = new Array(WALL_TOP, WALL_BOTTOM, WALL_LEFT, WALL_RIGHT);
 		
 		public static function reverse(direction:uint):uint
@@ -47,6 +52,15 @@ package maze.matrix {
 		public static function neighborP(pos:Point, dir:uint):Point
 		{
 			return neighbor(pos.x, pos.y, dir);
+		}
+		public static function randomNeighborWithDirection(x:uint, y:uint):Array
+		{
+			var dir:uint = WALLS_ARRAY[Random.randNumber(WALLS_ARRAY.length)];
+			return [neighbor(x, y, dir), dir];
+		}
+		public static function randomNeighborWithDirectionP(pos:Point):Array
+		{
+			return randomNeighborWithDirection(pos.x, pos.y);
 		}
 	}
 }
