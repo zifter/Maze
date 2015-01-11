@@ -73,8 +73,8 @@ package maze.matrix.prim {
 			}
 			return neighbors[Random.randNumber(neighbors.length)]
 		}
-		
-		public function getAllFrontier():Array
+
+		override public function getSpecialVisialCells(): Array
 		{
 			return _Frontier.getAsArray();
 		}

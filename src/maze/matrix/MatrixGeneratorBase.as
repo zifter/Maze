@@ -140,5 +140,10 @@ package maze.matrix {
 		{
 			return breakWall(pos.x, pos.y, side);
 		}
+		// override me
+		public function getSpecialVisialCells(): Array
+		{
+			return new Array();
+		}
 	}
 }

@@ -20,6 +20,17 @@ package maze.matrix {
 			view.height = size.y * genMaze.height + thickness;
 			view.graphics.lineStyle(thickness, 0x000000);
 
+			var special:Array = genMaze.getSpecialVisialCells();
+			// Display routre stack
+			for (var i:uint = 0; i < special.length; ++i)
+			{
+				var p:Point = special[i];
+				view.graphics.lineStyle();
+				view.graphics.beginFill(0xFF9999, 1);
+				view.graphics.drawRect(p.x * size.x, p.y * size.y, size.x, size.y);
+				view.graphics.endFill();
+			}
+			
 			for (var cx:uint = 0; cx < genMaze.width; ++cx)
 			{
 				for (var cy:uint = 0; cy < genMaze.height; ++cy)

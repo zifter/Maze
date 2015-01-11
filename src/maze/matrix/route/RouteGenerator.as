@@ -81,5 +81,9 @@ package maze.matrix.route {
 			}
 			_activeRoute.push(newIndex);
 		}		
+		override public function getSpecialVisialCells(): Array
+		{
+			return _activeRoute;
+		}
 	}
 }
