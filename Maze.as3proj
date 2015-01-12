@@ -53,6 +53,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="lib\as3commons-collections.swc" />
+    <element path="lib\as3commons-collections-1.3.2.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
