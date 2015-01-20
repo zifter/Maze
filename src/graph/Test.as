@@ -1,9 +1,11 @@
 package graph {
+	import graph.join.Join4
+
     public class Test
 	{
 		public function createEdges():void
 		{
-			var gr:Graph = new Graph();
+			var gr:Graph = new Graph(new Join4());
 
 			var v1:Vertex = new Vertex();
 			var v2:Vertex = new Vertex();

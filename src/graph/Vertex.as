@@ -7,21 +7,32 @@ package graph {
 	public class Vertex extends DataHolder {
 		private var _edges:IMap;
 
-        public function Vertex(data:Object = null) 
+        public function Vertex(join:JoinBase, data:Object = null)
 		{
             data = data;
+			// create structure of node
 			_edges = new Map();
+			for each (var dir:* in join.all())
+			{
+				_edges.add(null, dir);
+			}
+			
         }
-		public function addEdge(edge:Edge, dir:uint):Boolean
+		public function setEdge(edge:Edge, dir:*):Boolean
 		{
-			if (_edges.hasKey(dir))
+			if (!_edges.hasKey(dir))
 			{
 				return false;
 			}
-			_edges.add(dir, edge)
+			_edges.replaceFor(dir, edge)
 			return true
 		}
-		public function get edges():Array	{	return _edges.toArray()	}
+		// return all edges
+		public function get edges():Array	
+		{	
+			return _edges.toArray()	
+		}
+		// return all neighbors
 		public function neighbors():Array	
 		{	
 			var ns:Array = new Array();
@@ -34,10 +45,19 @@ package graph {
 			} 
 			return ns;
 		}
-		public function equals(v:Vertex):Boolean
-		{
-			return _edges == v._edges;
+		public function get edge(dir:*):Edge
+		{	
+			return _edges.itemFor(dir);
 		}
+		public function neighbor(dir:*):Vertex
+		{
+			var edge:Edge = edge(dir);
+			if (edge.src == this)
+				return edge.src;
+			else
+				return edge.dst;
+		}
+
 		public function toString():String
 		{
 			var str:String = "[" + id + ": ";
