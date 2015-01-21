@@ -1,6 +1,4 @@
 package graph.join {
-	import flash.geom.Point;
-	import utils.Random;
 	import graph.JoinBase;
 
 	public class Join4 implements JoinBase

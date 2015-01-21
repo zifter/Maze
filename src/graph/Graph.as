@@ -24,27 +24,38 @@ package graph {
             _numVertices = _numEdges = 0;
 			join = _join;
         }
-		
-		public function addEdge(v1:Vertex, v2:Vertex, dir:uint):Edge
+		public function Create():void
+		{
+
+		}
+		public function addVertex():Vertex
+		{
+			var vert:Vertex = new Vertex(join);
+			_vertices.add(vert);
+			return vert;
+		}
+		public function addEdge(v1:Vertex, v2:Vertex, dir:*):Edge
 		{
 			var edge:Edge = new Edge(v1, v2);
-			v1.addEdge(edge, dir);
-			v2.addEdge(edge, dir); // TODO:
+			v1.setEdge(edge, dir);
+			v2.setEdge(edge, join.reverse(dir));
+			_edges.add(edge);
 			return edge
 		}
-        //public function toString():String 
-		//{
-            //var s:String = "";
-            //for each (var v:Vertex in _vertices.toArray()) {
-                //s += v + ": ";
-//
-                //var set:ISet = _edges.itemFor(v) as Set;
-                //for each (var w:Vertex in set.toArray()) {
-                    //s += (w + " ");
-                //}
-                //s += "\n";
-            //}
-            //return s;
-        //}
+        public function toString():String 
+		{
+            var s:String = "Vertex:";
+            for each (var v:Vertex in _vertices.toArray()) 
+			{
+                s += v + "\n";
+            }
+			s += "Edges:";
+            for each (var e:Edge in _edges.toArray()) 
+			{
+                s += e + "\n";
+            }
+
+            return s;
+        }
     }
 }

@@ -18,6 +18,7 @@ package graph {
 			}
 			
         }
+		// set new edge for 
 		public function setEdge(edge:Edge, dir:*):Boolean
 		{
 			if (!_edges.hasKey(dir))
@@ -45,7 +46,7 @@ package graph {
 			} 
 			return ns;
 		}
-		public function get edge(dir:*):Edge
+		public function edge(dir:*):Edge
 		{	
 			return _edges.itemFor(dir);
 		}
@@ -57,7 +58,10 @@ package graph {
 			else
 				return edge.dst;
 		}
-
+		public function equals(vert:Vertex):Boolean
+		{
+			return this == vert;
+		}
 		public function toString():String
 		{
 			var str:String = "[" + id + ": ";
